@@ -21,7 +21,8 @@ def particles(data_set_name: str = typer.Argument(..., help="RUCIO dataset name"
 def decays(
     data_set_name: str = typer.Argument(..., help="RUCIO dataset name"),
     particle_name: str = typer.Argument(
-        ..., help="The integer pdgid or the recognized name (25 or e-)"
+        ...,
+        help="The integer pdgid or the recognized name (25 or e-).",
     ),
 ):
     """print out decay frequency for a particular particle"""

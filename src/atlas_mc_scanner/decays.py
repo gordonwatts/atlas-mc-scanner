@@ -1,9 +1,11 @@
+from collections import defaultdict
+
 import awkward as ak
-import numpy as np
 from func_adl_servicex_xaodr25 import FuncADLQueryPHYS
 from particle import Particle
+from tabulate import tabulate
 
-from atlas_mc_scanner.common import run_query, get_particle_name
+from atlas_mc_scanner.common import get_particle_name, run_query
 
 
 def query(pdgid: int):
@@ -44,7 +46,7 @@ def execute_decay(
     """
     # Convert particle name to pdgid
     try:
-        pdgid = Particle.from_name(particle_name).pdgid
+        pdgid = int(Particle.from_name(particle_name).pdgid)
     except Exception:
         pdgid = int(particle_name)
 
@@ -52,14 +54,21 @@ def execute_decay(
     q = query(pdgid)
     result = run_query(data_set_name, q)["decay_pdgId"]
 
-    # Find all the unique decays
-    unique, counts = np.unique(
-        ak.flatten(result).to_numpy(), return_counts=True, axis=0
-    )
-
-    # Turn each unique pdgid decay string into a string of particles.
     def as_tuple(np_decay):
+        "Turn a list of integers into a tuple of integers"
         return tuple(int(a) for a in np_decay)
+
+    # Find all the unique decays. This is horribly slow, but it works.
+    # unique, counts = np.unique(
+    #     ak.flatten(result).to_numpy(), return_counts=True, axis=0
+    # )
+    counts_dict = defaultdict(int)
+    for decay in ak.flatten(result):
+        decay_tuple = as_tuple(decay)
+        counts_dict[decay_tuple] += 1
+
+    unique = list(counts_dict.keys())
+    counts = list(counts_dict.values())
 
     decay_names = {
         as_tuple(a_decay): " + ".join(get_particle_name(pid) for pid in list(a_decay))
@@ -67,9 +76,8 @@ def execute_decay(
     }
 
     # Print table of decay frequencies
-    from tabulate import tabulate
 
-    total = counts.sum()
+    total = sum(counts)
     table = []
     for decay, count in zip(unique, counts):
         decay_tuple = as_tuple(decay)
@@ -77,6 +85,7 @@ def execute_decay(
         table.append(
             [list(decay_tuple), decay_names[decay_tuple], count, f"{fraction:.2%}"]
         )
+    table.sort(key=lambda row: float(row[3].strip("%")), reverse=True)
     print(
         tabulate(
             table,
