@@ -25,8 +25,9 @@ def decays(
     ),
 ):
     """print out decay frequency for a particular particle"""
-    # TODO: Implement the actual logic for decay frequency
-    print(f"Decay frequency for {particle_name} (not yet implemented)")
+    from atlas_mc_scanner.decays import execute_decay
+
+    execute_decay(data_set_name, particle_name)
 
 
 if __name__ == "__main__":
