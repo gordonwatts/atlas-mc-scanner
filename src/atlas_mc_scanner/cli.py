@@ -10,7 +10,7 @@ app = typer.Typer()
 
 
 @app.command()
-def particles(data_set_name: str):
+def particles(data_set_name: str = typer.Argument(..., help="RUCIO dataset name")):
     """Dump particles in the dataset."""
     from atlas_mc_scanner.list_particles import execute_request
 
@@ -18,7 +18,12 @@ def particles(data_set_name: str):
 
 
 @app.command()
-def decays(particle_name: str):
+def decays(
+    data_set_name: str = typer.Argument(..., help="RUCIO dataset name"),
+    particle_name: str = typer.Argument(
+        ..., help="The integer pdgid or the recognized name (25 or e-)"
+    ),
+):
     """print out decay frequency for a particular particle"""
     # TODO: Implement the actual logic for decay frequency
     print(f"Decay frequency for {particle_name} (not yet implemented)")
