@@ -89,6 +89,8 @@ def execute_request(ds_name):
     ]
     print(
         tabulate(
-            table, headers=["PDG ID", "Name", "Count", "Avg N/Event"], tablefmt="grid"
+            table,
+            headers=["PDG ID", "Name", "Count", "Avg Count/Event"],
+            tablefmt="fancy_grid",
         )
     )
