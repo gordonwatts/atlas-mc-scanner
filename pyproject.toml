@@ -22,7 +22,14 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = ["typer>=0.9.0"]
+dependencies = [
+  "typer>=0.9.0",
+  "func_adl_servicex_xaodr25",
+  "awkward",
+  "servicex-analysis-utils",
+  "tabulate",
+  "particle",
+]
 
 [project.urls]
 Documentation = "https://github.com/Gordon Watts/atlas-mc-scanner#readme"
