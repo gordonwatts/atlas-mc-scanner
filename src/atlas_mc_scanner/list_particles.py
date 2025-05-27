@@ -1,10 +1,9 @@
 import awkward as ak
 import numpy as np
 from func_adl_servicex_xaodr25 import FuncADLQueryPHYS
-from particle import Particle
 from tabulate import tabulate
 
-from atlas_mc_scanner.common import run_query
+from atlas_mc_scanner.common import run_query, get_particle_name
 
 
 def query():
@@ -20,13 +19,6 @@ def query():
     result = all_mc_particles.Select(lambda e: {"pdgid": [t.pdgId() for t in e]})
 
     return result
-
-
-def get_particle_name(pdgid):
-    try:
-        return Particle.from_pdgid(pdgid).name
-    except Exception:
-        return f"Unknown ({pdgid})"
 
 
 def execute_request(ds_name):

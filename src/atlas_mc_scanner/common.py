@@ -2,6 +2,7 @@ import logging
 
 import awkward as ak
 from func_adl import ObjectStream
+from particle import Particle
 from servicex import Sample, ServiceXSpec, dataset, deliver
 from servicex_analysis_utils import to_awk
 
@@ -43,3 +44,10 @@ def run_query(
     result_list = to_awk(sx_result)["MySample"]
     logging.info(f"Received {len(result_list)} entries.")
     return result_list
+
+
+def get_particle_name(pdgid):
+    try:
+        return Particle.from_pdgid(pdgid).name
+    except Exception:
+        return f"Unknown ({pdgid})"

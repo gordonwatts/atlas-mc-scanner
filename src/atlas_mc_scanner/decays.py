@@ -1,7 +1,9 @@
+import awkward as ak
+import numpy as np
 from func_adl_servicex_xaodr25 import FuncADLQueryPHYS
 from particle import Particle
 
-from atlas_mc_scanner.common import run_query
+from atlas_mc_scanner.common import run_query, get_particle_name
 
 
 def query(pdgid: int):
@@ -48,6 +50,37 @@ def execute_decay(
 
     # Run the query.
     q = query(pdgid)
-    result = run_query(data_set_name, q)
+    result = run_query(data_set_name, q)["decay_pdgId"]
 
-    print(result)
+    # Find all the unique decays
+    unique, counts = np.unique(
+        ak.flatten(result).to_numpy(), return_counts=True, axis=0
+    )
+
+    # Turn each unique pdgid decay string into a string of particles.
+    def as_tuple(np_decay):
+        return tuple(int(a) for a in np_decay)
+
+    decay_names = {
+        as_tuple(a_decay): " + ".join(get_particle_name(pid) for pid in list(a_decay))
+        for a_decay in unique
+    }
+
+    # Print table of decay frequencies
+    from tabulate import tabulate
+
+    total = counts.sum()
+    table = []
+    for decay, count in zip(unique, counts):
+        decay_tuple = as_tuple(decay)
+        fraction = count / total if total > 0 else 0
+        table.append(
+            [list(decay_tuple), decay_names[decay_tuple], count, f"{fraction:.2%}"]
+        )
+    print(
+        tabulate(
+            table,
+            headers=["Decay Products (PDGIDs)", "Decay Names", "Frequency", "Fraction"],
+            tablefmt="fancy_grid",
+        )
+    )
