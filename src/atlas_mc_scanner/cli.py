@@ -31,5 +31,15 @@ def decays(
     execute_decay(data_set_name, particle_name)
 
 
+@app.command()
+def find_containers(
+    data_set_name: str = typer.Argument(..., help="RUCIO dataset name"),
+):
+    """List containers that likely contain TruthParticles."""
+    from atlas_mc_scanner.find_containers import execute_find_containers
+
+    execute_find_containers(data_set_name)
+
+
 if __name__ == "__main__":
     app()
