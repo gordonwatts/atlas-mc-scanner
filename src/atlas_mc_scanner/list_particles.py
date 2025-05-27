@@ -6,14 +6,12 @@ from tabulate import tabulate
 from atlas_mc_scanner.common import run_query, get_particle_name
 
 
-def query():
+def query(container_name="TruthBSMWithDecayParticles"):
     "Build base query for MC particles"
     query_base = FuncADLQueryPHYS()
 
     # Establish all the various types of objects we need.
-    all_mc_particles = query_base.Select(
-        lambda e: e.TruthParticles("TruthBSMWithDecayParticles")
-    )
+    all_mc_particles = query_base.Select(lambda e: e.TruthParticles(container_name))
 
     # Next, fetch everything we want from them.
     result = all_mc_particles.Select(lambda e: {"pdgid": [t.pdgId() for t in e]})
@@ -21,8 +19,8 @@ def query():
     return result
 
 
-def execute_request(ds_name):
-    q = query()
+def execute_request(ds_name, container_name="TruthBSMWithDecayParticles"):
+    q = query(container_name)
     result = run_query(ds_name, q)
 
     # now, collate everything by particle id to get a count.
