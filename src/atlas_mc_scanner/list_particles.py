@@ -100,6 +100,7 @@ def execute_request(ds_name):
         )
         for pid, count in pdgid_counts.items()
     ]
+    table.sort(key=lambda x: x[2], reverse=True)
     print(
         tabulate(
             table,
