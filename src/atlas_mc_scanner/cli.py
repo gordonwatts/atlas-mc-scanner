@@ -17,5 +17,12 @@ def particles(data_set_name: str):
     execute_request(data_set_name)
 
 
+@app.command()
+def decays(particle_name: str):
+    """print out decay frequency for a particular particle"""
+    # TODO: Implement the actual logic for decay frequency
+    print(f"Decay frequency for {particle_name} (not yet implemented)")
+
+
 if __name__ == "__main__":
     app()
