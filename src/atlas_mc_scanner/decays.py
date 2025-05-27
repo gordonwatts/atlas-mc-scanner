@@ -2,10 +2,13 @@ from collections import defaultdict
 
 import awkward as ak
 from func_adl_servicex_xaodr25 import FuncADLQueryPHYS
-from particle import Particle
 from tabulate import tabulate
 
-from atlas_mc_scanner.common import get_particle_name, run_query
+from atlas_mc_scanner.common import (
+    get_particle_name,
+    get_pdgid_from_name_or_int,
+    run_query,
+)
 
 
 def query(pdgid: int):
@@ -45,10 +48,7 @@ def execute_decay(
         particle_name (str): The integer pdgid or the recognized name (e.g., "25" or "e-").
     """
     # Convert particle name to pdgid
-    try:
-        pdgid = int(Particle.from_name(particle_name).pdgid)
-    except Exception:
-        pdgid = int(particle_name)
+    pdgid = get_pdgid_from_name_or_int(particle_name)
 
     # Run the query.
     q = query(pdgid)

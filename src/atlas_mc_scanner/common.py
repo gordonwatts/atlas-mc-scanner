@@ -51,3 +51,19 @@ def get_particle_name(pdgid):
         return Particle.from_pdgid(pdgid).name
     except Exception:
         return f"Unknown ({pdgid})"
+
+
+def get_pdgid_from_name_or_int(particle_name):
+    """
+    Convert a particle name or PDGID string to an integer PDGID.
+    Args:
+        particle_name (str): The integer pdgid or the recognized name (e.g., "25" or "e-").
+    Returns:
+        int: The PDGID as an integer.
+    """
+    from particle import Particle
+
+    try:
+        return int(Particle.from_name(particle_name).pdgid)
+    except Exception:
+        return int(particle_name)
