@@ -10,9 +10,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"
 keywords = []
-authors = [
-  { name = "Gordon Watts", email = "gwatts@uw.edu" },
-]
+authors = [{ name = "Gordon Watts", email = "gwatts@uw.edu" }]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
@@ -24,7 +22,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+dependencies = ["typer>=0.9.0"]
 
 [project.urls]
 Documentation = "https://github.com/Gordon Watts/atlas-mc-scanner#readme"
@@ -35,9 +33,7 @@ Source = "https://github.com/Gordon Watts/atlas-mc-scanner"
 path = "src/atlas_mc_scanner/__about__.py"
 
 [tool.hatch.envs.types]
-extra-dependencies = [
-  "mypy>=1.0.0",
-]
+extra-dependencies = ["mypy>=1.0.0"]
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/atlas_mc_scanner tests}"
 
@@ -45,17 +41,17 @@ check = "mypy --install-types --non-interactive {args:src/atlas_mc_scanner tests
 source_pkgs = ["atlas_mc_scanner", "tests"]
 branch = true
 parallel = true
-omit = [
-  "src/atlas_mc_scanner/__about__.py",
-]
+omit = ["src/atlas_mc_scanner/__about__.py"]
 
 [tool.coverage.paths]
-atlas_mc_scanner = ["src/atlas_mc_scanner", "*/atlas-mc-scanner/src/atlas_mc_scanner"]
+atlas_mc_scanner = [
+  "src/atlas_mc_scanner",
+  "*/atlas-mc-scanner/src/atlas_mc_scanner",
+]
 tests = ["tests", "*/atlas-mc-scanner/tests"]
 
 [tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+
+[project.scripts]
+atlas-mc-scanner = "atlas_mc_scanner.cli:app"
