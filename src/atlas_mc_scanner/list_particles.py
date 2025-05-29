@@ -39,8 +39,8 @@ def execute_request(ds_name, container_name="TruthBSMWithDecayParticles"):
     # Build and print final table.
     table = [
         (
-            pid,
-            get_particle_name(pid),
+            f"{int(pid):d}",
+            get_particle_name(int(pid)),
             count,
             count / total_events,
             max_count[pid],
