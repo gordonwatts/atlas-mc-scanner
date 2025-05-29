@@ -21,7 +21,7 @@ def query(container_name="TruthBSMWithDecayParticles"):
 
 def execute_request(ds_name, container_name="TruthBSMWithDecayParticles"):
     q = query(container_name)
-    result = run_query(ds_name, q)
+    result = run_query(q, ds_name)
 
     # now, collate everything by particle id to get a count.
     total_events = len(result)

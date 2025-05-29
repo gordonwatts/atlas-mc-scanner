@@ -54,7 +54,7 @@ def execute_decay(
 
     # Run the query.
     q = query(pdgid, container_name)
-    result = run_query(data_set_name, q)["decay_pdgId"]
+    result = run_query(q, data_set_name)["decay_pdgId"]
 
     def as_tuple(np_decay):
         "Turn a list of integers into a tuple of integers"

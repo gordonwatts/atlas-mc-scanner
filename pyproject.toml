@@ -30,6 +30,9 @@ dependencies = [
   "particle",
 ]
 
+[project.optional-dependencies]
+local = ["servicex-local", "func_adl_xAOD"]
+
 [project.urls]
 Documentation = "https://github.com/Gordon Watts/atlas-mc-scanner#readme"
 Issues = "https://github.com/Gordon Watts/atlas-mc-scanner/issues"
