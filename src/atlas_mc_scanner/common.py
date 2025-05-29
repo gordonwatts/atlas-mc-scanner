@@ -4,8 +4,12 @@ from pathlib import Path
 import re
 from typing import Tuple
 from urllib.parse import unquote, urlparse
-import servicex_local as sx_local
 
+try:
+    import servicex_local as sx_local
+except ImportError:
+    # If servicex_local is not available, we will use the remote ServiceX
+    sx_local = None
 
 from particle import Particle
 from servicex import Sample, ServiceXSpec, dataset, deliver
@@ -100,6 +104,11 @@ def install_sx_local():
     Returns:
         tuple: A tuple containing the names of the codegen and backend.
     """
+    if sx_local is None:
+        raise ImportError(
+            "servicex-local is not installed. Please install it using the `[local]` "
+            "option or directly."
+        )
     from servicex_local import DockerScienceImage, LocalXAODCodegen, SXLocalAdaptor
 
     codegen_name = "atlasr22-local"
