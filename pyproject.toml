@@ -28,6 +28,7 @@ dependencies = [
   "servicex-analysis-utils",
   "tabulate",
   "particle",
+  "jinja2",
 ]
 
 [project.optional-dependencies]
