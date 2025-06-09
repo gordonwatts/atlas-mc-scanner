@@ -16,7 +16,8 @@
 **Prerequisites**:
 
 1. [Install the package manager `uv`](https://docs.astral.sh/uv/getting-started/installation/) on your machine.
-1. Get a `servicex.yaml` file in your home directory.
+1. [Get a `servicex.yaml` file](https://servicex-frontend.readthedocs.io/en/stable/connect_servicex.html) in your home directory.
+    - As of this writing the UChicago instructions are slightly out of date. After clicking the `sign-in` link at the top of the UChicago `servicex` page, look for the `ATLAS` button. Click that and use your usual CERN sign-on.
 
 The package manager `uv` enables a fast download and isolated install of simple utilities - and it means you don't have to pay attention to dependencies or anything else.
 
