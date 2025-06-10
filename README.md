@@ -104,7 +104,7 @@ This is a known [bug](https://github.com/gordonwatts/atlas-mc-scanner/issues/22)
 
 ### Bad container name
 
-You will get the same stack-dump as with the data set not existing (the `list index out of range`), and scroll up and look at the top of the crash and look for `Transform "MySample" completed with failures: 1/1`. Below that will be a huge URL which points to the monitoring (it is the seocond URL in the dump). From there look for an `ERROR` and click on the second column to expand that error entry. There, under `logBody` you can see the complete output from the EventLoop job. Near the bottom you'll finally find the familiar errors:
+You will get the same stack-dump as with the data set not existing (the `list index out of range`), and scroll up and look at the top of the crash and look for `Transform "atlas-mc-scanner" completed with failures: 1/1`. Below that will be a huge URL which points to the monitoring (it is the seocond URL in the dump). From there look for an `ERROR` and click on the second column to expand that error entry. There, under `logBody` you can see the complete output from the EventLoop job. Near the bottom you'll finally find the familiar errors:
 
 ```text
 xAOD::TEvent::connectB... WARNING No metadata available for branch: forkitover

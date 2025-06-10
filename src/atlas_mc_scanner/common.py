@@ -160,7 +160,7 @@ def run_query(query, ds_name: str):
     )
 
     # Turn it into something useful we can process!
-    result_list = to_awk(sx_result)["MySample"]
+    result_list = to_awk(sx_result)["atlas-mc-scanner"]
     logging.info(f"Received {len(result_list)} entries.")
     return result_list
 
