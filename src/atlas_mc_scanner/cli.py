@@ -35,15 +35,28 @@ def particles(
         count=True,
         help="Increase verbosity (-v for INFO, -vv for DEBUG)",
     ),
+    no_abs: bool = typer.Option(
+        False,
+        "--no-abs",
+        help="Do not take the absolute value of the pdgid before creating the table.",
+    ),
 ):
     """Dump particles in the dataset."""
     set_verbosity(verbose)
     from atlas_mc_scanner.list_particles import execute_request
 
-    execute_request(data_set_name, container)
+    execute_request(data_set_name, container, no_abs)
 
 
-@app.command()
+@app.command(
+    epilog="""
+Note:
+
+    - `No Decay Products` means that a `TruthParticle` decay vertex was found, but it had no outgoing particles.
+
+    - `Stable` means no decay vertex was found.
+"""
+)
 def decays(
     data_set_name: str = typer.Argument(..., help="RUCIO dataset name"),
     particle_name: str = typer.Argument(
@@ -63,7 +76,7 @@ def decays(
         help="Increase verbosity (-v for INFO, -vv for DEBUG)",
     ),
 ):
-    """print out decay frequency for a particular particle"""
+    """Print out decay frequency for a particular particle."""
     set_verbosity(verbose)
     from atlas_mc_scanner.decays import execute_decay
 

@@ -19,17 +19,24 @@ def query(pdgid: int, container_name="TruthBSMWithDecayParticles"):
     all_mc_particles = query_base.Select(
         lambda e: e.TruthParticles(container_name)
     ).Select(
-        lambda particles: particles.Where(lambda p: p.pdgId() == pdgid).Where(
-            lambda p: p.hasDecayVtx()
-        )
+        lambda particles: {
+            "good": particles.Where(lambda p: p.pdgId() == pdgid).Where(
+                lambda p: p.hasDecayVtx()
+            ),
+            "none_count": particles.Where(lambda p: p.pdgId() == pdgid)
+            .Where(lambda p: not p.hasDecayVtx())
+            .Count(),
+        }
     )
 
     # Next, fetch everything we want from them.
     result = all_mc_particles.Select(
         lambda e: {
             "decay_pdgId": [
-                [vp.pdgId() for vp in t.decayVtx().outgoingParticleLinks()] for t in e
-            ]
+                [vp.pdgId() for vp in t.decayVtx().outgoingParticleLinks()]
+                for t in e.good  # type: ignore
+            ],
+            "none_count": e.none_count,  # type: ignore
         }
     )
 
@@ -54,16 +61,14 @@ def execute_decay(
 
     # Run the query.
     q = query(pdgid, container_name)
-    result = run_query(q, data_set_name)["decay_pdgId"]
+    all_results = run_query(q, data_set_name)
+    result = all_results["decay_pdgId"]
+    none_count = all_results["none_count"]
 
     def as_tuple(np_decay):
         "Turn a list of integers into a tuple of integers"
         return tuple(int(a) for a in np_decay)
 
-    # Find all the unique decays. This is horribly slow, but it works.
-    # unique, counts = np.unique(
-    #     ak.flatten(result).to_numpy(), return_counts=True, axis=0
-    # )
     counts_dict = defaultdict(int)
     for decay in ak.flatten(result):
         decay_tuple = as_tuple(decay)
@@ -79,13 +84,23 @@ def execute_decay(
 
     # Print table of decay frequencies
 
-    total = sum(counts)
+    total_none_count = ak.sum(none_count)
+    total = sum(counts) + total_none_count
     table = []
     for decay, count in zip(unique, counts):
         decay_tuple = as_tuple(decay)
         fraction = count / total if total > 0 else 0
+        decay_list = list(decay_tuple) if len(decay_tuple) > 0 else "No Decay Products"
+        table.append([decay_list, decay_names[decay_tuple], count, f"{fraction:.2%}"])
+
+    if total_none_count > 0:
         table.append(
-            [list(decay_tuple), decay_names[decay_tuple], count, f"{fraction:.2%}"]
+            [
+                "Stable",
+                "",
+                total_none_count,
+                f"{total_none_count / (total):.2%}",
+            ]
         )
     table.sort(key=lambda row: float(row[3].strip("%")), reverse=True)
     print(
