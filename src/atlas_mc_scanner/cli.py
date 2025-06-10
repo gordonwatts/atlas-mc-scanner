@@ -43,7 +43,13 @@ def particles(
     execute_request(data_set_name, container)
 
 
-@app.command()
+@app.command(
+    epilog="""
+Note:
+
+    - `No Decay Products` means that a `TruthParticle` decay vertex was found, but it had no outgoing particles.
+"""
+)
 def decays(
     data_set_name: str = typer.Argument(..., help="RUCIO dataset name"),
     particle_name: str = typer.Argument(
@@ -63,7 +69,7 @@ def decays(
         help="Increase verbosity (-v for INFO, -vv for DEBUG)",
     ),
 ):
-    """print out decay frequency for a particular particle"""
+    """Print out decay frequency for a particular particle."""
     set_verbosity(verbose)
     from atlas_mc_scanner.decays import execute_decay
 
