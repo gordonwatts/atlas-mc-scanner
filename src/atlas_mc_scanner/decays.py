@@ -84,9 +84,8 @@ def execute_decay(
     for decay, count in zip(unique, counts):
         decay_tuple = as_tuple(decay)
         fraction = count / total if total > 0 else 0
-        table.append(
-            [list(decay_tuple), decay_names[decay_tuple], count, f"{fraction:.2%}"]
-        )
+        decay_list = list(decay_tuple) if len(decay_tuple) > 0 else "Stable"
+        table.append([decay_list, decay_names[decay_tuple], count, f"{fraction:.2%}"])
     table.sort(key=lambda row: float(row[3].strip("%")), reverse=True)
     print(
         tabulate(
