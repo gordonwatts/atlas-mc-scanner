@@ -54,7 +54,7 @@ def execute_request(ds_name, container_name="TruthBSMWithDecayParticles", no_abs
         tabulate(
             table,
             headers=[
-                "PDG ID",
+                "PDG ID" if no_abs else "abs(PDG ID)",
                 "Name",
                 "Count",
                 "Avg Count/Event",
