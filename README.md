@@ -80,6 +80,7 @@ $ atlas-mc-scanner decays mc23_13p6TeV:mc23_13p6TeV.561231.MGPy8EG_A14N23LO_HAHM
 The ATLAS decay model is complex:
 
 - If the _Decay Products_ column contains `No Decay Products`, that means a decay vertex was found in the `TruthParticle`, but it had decay products.
+- If the _Decay Products_ column contains `Stable`, that means no decay vertex was found.
 
 ### Commands
 

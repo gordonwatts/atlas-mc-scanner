@@ -48,6 +48,8 @@ def particles(
 Note:
 
     - `No Decay Products` means that a `TruthParticle` decay vertex was found, but it had no outgoing particles.
+
+    - `Stable` means no decay vertex was found.
 """
 )
 def decays(
