@@ -61,6 +61,26 @@ PS C:\Users\gordo> uvx atlas-mc-scanner particles mc23_13p6TeV:mc23_13p6TeV.5612
 ╘══════════╧══════════════╧═════════╧═══════════════════╧═══════════════════╧═══════════════════╛
 ```
 
+And looking at the decay products:
+
+```bash
+$ atlas-mc-scanner decays mc23_13p6TeV:mc23_13p6TeV.561231.MGPy8EG_A14N23LO_HAHM_ggHZdZd_mumu_600_0p005.deriv.DAOD_LLP1.e8577_e8528_a934_s4370_r16083_r15970_p6619_tid42970882_00 13
+
+╒═══════════════════════════╤═══════════════╤═════════════╤════════════╕
+│ Decay Products (PDGIDs)   │ Decay Names   │   Frequency │ Fraction   │
+╞═══════════════════════════╪═══════════════╪═════════════╪════════════╡
+│ [13, 22]                  │ mu- + gamma   │        1438 │ 40.66%     │
+├───────────────────────────┼───────────────┼─────────────┼────────────┤
+│ [13]                      │ mu-           │        1373 │ 38.82%     │
+├───────────────────────────┼───────────────┼─────────────┼────────────┤
+│ No Decay Products         │               │         726 │ 20.53%     │
+╘═══════════════════════════╧═══════════════╧═════════════╧════════════╛
+```
+
+The ATLAS decay model is complex:
+
+- If the _Decay Products_ column contains `No Decay Products`, that means a decay vertex was found in the `TruthParticle`, but it had decay products.
+
 ### Commands
 
 - Use the `particles` sub-command to list a container of truth particles
