@@ -25,6 +25,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install build
 
+      - name: Set version in __about__.py
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "__version__ = \"$VERSION\"" > src/atlas_mc_scanner/__about__.py
+
       - name: Build package
         run: python -m build
 
