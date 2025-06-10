@@ -69,6 +69,29 @@ PS C:\Users\gordo> uvx atlas-mc-scanner particles mc23_13p6TeV:mc23_13p6TeV.5612
 
 All datasets are assumed to be rucio, though you can specify a `https://xxx` for a file if you like. Obviously, they must be a file in the `xAOD` format! This code uses the `EventLoop` C++ framework, run on ServiceX to extract the information.
 
+## Errors
+
+Some common errors you might see.
+
+### Missing `servicex.yaml` file
+
+The error message when you run is fairly straight forward. The `servicex.yaml` file (or `.servicex`) must exist in your home directory or in the current working directory.
+
+### Your dataset does not exist
+
+This is a known [bug](https://github.com/gordonwatts/atlas-mc-scanner/issues/22). There are two hints. First, the `Transform` status update will be _red_ rather than _green_. Second, you'll have a stack dump that ends with the message `IndexError: list index out of range`.
+
+### Bad container name
+
+You will get the same stack-dump as with the data set not existing (the `list index out of range`), and scroll up and look at the top of the crash and look for `Transform "MySample" completed with failures: 1/1`. Below that will be a huge URL which points to the monitoring (it is the seocond URL in the dump). From there look for an `ERROR` and click on the second column to expand that error entry. There, under `logBody` you can see the complete output from the EventLoop job. Near the bottom you'll finally find the familiar errors:
+
+```text
+xAOD::TEvent::connectB... WARNING No metadata available for branch: forkitover
+xAOD::TEvent::connectB... WARNING Branch "forkitover" not available on input
+xAOD::TEvent::retrieve    WARNING Couldn't (const) retrieve "DataVector<xAOD::TruthParticle_v1>/forkitover"
+AnalysisAlg              ERROR   /home/atlas/rel/source/analysis/Root/query.cxx:73 (virtual StatusCode query::execute()): Failed to call "evtStore()->retrieve(result, "forkitover")"
+```
+
 ## Installation
 
 ```console
