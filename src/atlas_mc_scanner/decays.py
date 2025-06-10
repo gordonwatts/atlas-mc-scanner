@@ -34,9 +34,9 @@ def query(pdgid: int, container_name="TruthBSMWithDecayParticles"):
         lambda e: {
             "decay_pdgId": [
                 [vp.pdgId() for vp in t.decayVtx().outgoingParticleLinks()]
-                for t in e.good
+                for t in e.good  # type: ignore
             ],
-            "none_count": e.none_count,
+            "none_count": e.none_count,  # type: ignore
         }
     )
 

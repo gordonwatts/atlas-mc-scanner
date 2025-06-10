@@ -49,7 +49,7 @@ def execute_request(ds_name, container_name="TruthBSMWithDecayParticles", no_abs
         )
         for pid, count in pdgid_counts.items()
     ]
-    table.sort(key=lambda x: x[2], reverse=True)
+    table.sort(key=lambda x: x[2], reverse=True)  # type: ignore
     print(
         tabulate(
             table,
