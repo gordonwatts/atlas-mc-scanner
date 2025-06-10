@@ -144,7 +144,7 @@ def run_query(query, ds_name: str):
     spec = ServiceXSpec(
         Sample=[
             Sample(
-                Name="MySample",
+                Name="atlas-mc-scanner",
                 Dataset=ds,
                 Query=query,
                 Codegen=codegen_name,
