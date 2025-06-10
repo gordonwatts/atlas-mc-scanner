@@ -35,12 +35,17 @@ def particles(
         count=True,
         help="Increase verbosity (-v for INFO, -vv for DEBUG)",
     ),
+    no_abs: bool = typer.Option(
+        False,
+        "--no-abs",
+        help="Do not take the absolute value of the pdgid before creating the table.",
+    ),
 ):
     """Dump particles in the dataset."""
     set_verbosity(verbose)
     from atlas_mc_scanner.list_particles import execute_request
 
-    execute_request(data_set_name, container)
+    execute_request(data_set_name, container, no_abs)
 
 
 @app.command(

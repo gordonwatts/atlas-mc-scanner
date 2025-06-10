@@ -19,14 +19,15 @@ def query(container_name="TruthBSMWithDecayParticles"):
     return result
 
 
-def execute_request(ds_name, container_name="TruthBSMWithDecayParticles"):
+def execute_request(ds_name, container_name="TruthBSMWithDecayParticles", no_abs=False):
     q = query(container_name)
     result = run_query(q, ds_name)
 
     # now, collate everything by particle id to get a count.
     total_events = len(result)
 
-    r = ak.flatten(abs(result.pdgid)).to_numpy()
+    pdgid_list = result.pdgid if no_abs else abs(result.pdgid)
+    r = ak.flatten(pdgid_list).to_numpy()
 
     unique, counts = np.unique(r, return_counts=True)
     pdgid_counts = dict(zip(unique, counts))
