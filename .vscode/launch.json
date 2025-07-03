@@ -1,0 +1,43 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: cli-find-containers",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/atlas_mc_scanner/cli.py",
+            "console": "integratedTerminal",
+            "args": [
+                "find-containers",
+                "mc23_13p6TeV:mc23_13p6TeV.561231.MGPy8EG_A14N23LO_HAHM_ggHZdZd_mumu_600_0p005.deriv.DAOD_LLP1.e8577_e8528_a934_s4370_r16083_r15970_p6619_tid42970882_00"
+            ]
+        },
+        {
+            "name": "Python Debugger: local-decays",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/atlas_mc_scanner/cli.py",
+            "console": "integratedTerminal",
+            "args": [
+                "decays",
+                "../sx_training_fetch/DAOD_LLP1.outputLLP1_mc23_527565_LeadingJets_08042025.pool.root",
+                "36",
+            ]
+        },
+        {
+            "name": "Python Debugger: decays",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/atlas_mc_scanner/cli.py",
+            "console": "integratedTerminal",
+            "args": [
+                "decays",
+                "mc23_13p6TeV:mc23_13p6TeV.561231.MGPy8EG_A14N23LO_HAHM_ggHZdZd_mumu_600_0p005.deriv.DAOD_LLP1.e8577_e8528_a934_s4370_r16083_r15970_p6619_tid42970882_00",
+                "13",
+            ]
+        }
+    ]
+}
