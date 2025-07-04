@@ -33,6 +33,7 @@ dependencies = [
 
 [project.optional-dependencies]
 local = ["servicex-local", "func_adl_xAOD"]
+test = ["pytest", "pytest-cov", "pytest-mock", "pytest-xdist", "coverage"]
 
 [project.urls]
 Documentation = "https://github.com/Gordon Watts/atlas-mc-scanner#readme"
