@@ -1,14 +1,25 @@
 from collections import defaultdict
+from dataclasses import dataclass
+from typing import List, Optional, Tuple
 
 import awkward as ak
 from func_adl_servicex_xaodr25 import FuncADLQueryPHYS
-from tabulate import tabulate
 
 from atlas_mc_scanner.common import (
     get_particle_name,
     get_pdgid_from_name_or_int,
     run_query,
 )
+
+
+@dataclass
+class DecaySummary:
+    """Summary information for a particular decay mode."""
+
+    pdgids: Optional[Tuple[int, ...]]
+    decay_names: str
+    count: int
+    fraction: float
 
 
 def query(pdgid: int, container_name="TruthBSMWithDecayParticles"):
@@ -47,14 +58,13 @@ def execute_decay(
     data_set_name: str,
     particle_name: str,
     container_name: str = "TruthBSMWithDecayParticles",
-):
-    """
-    Print out decay frequency for a particular particle.
+) -> List[DecaySummary]:
+    """Return decay frequencies for a particular particle.
 
     Args:
-        data_set_name (str): The RUCIO dataset name.
-        particle_name (str): The integer pdgid or the recognized name (e.g., "25" or "e-").
-        container_name (str): The name of the container to query.
+        data_set_name: The RUCIO dataset name.
+        particle_name: The integer pdgid or the recognized name (25 or e-).
+        container_name: The name of the container to query.
     """
     # Convert particle name to pdgid
     pdgid = get_pdgid_from_name_or_int(particle_name)
@@ -82,31 +92,37 @@ def execute_decay(
         for a_decay in unique
     }
 
-    # Print table of decay frequencies
+    # Build dataclass list of decay frequencies
 
     total_none_count = ak.sum(none_count)
     total = sum(counts) + total_none_count
-    table = []
+    summaries: List[DecaySummary] = []
+
     for decay, count in zip(unique, counts):
         decay_tuple = as_tuple(decay)
-        fraction = count / total if total > 0 else 0
-        decay_list = list(decay_tuple) if len(decay_tuple) > 0 else "No Decay Products"
-        table.append([decay_list, decay_names[decay_tuple], count, f"{fraction:.2%}"])
+        fraction = count / total if total > 0 else 0.0
+        pdgids: Tuple[int, ...] | None = tuple(decay_tuple)
+        if len(decay_tuple) == 0:
+            pdgids = tuple()
+        summaries.append(
+            DecaySummary(
+                pdgids=pdgids,
+                decay_names=decay_names[decay_tuple],
+                count=count,
+                fraction=float(fraction),
+            )
+        )
 
     if total_none_count > 0:
-        table.append(
-            [
-                "Stable",
-                "",
-                total_none_count,
-                f"{total_none_count / (total):.2%}",
-            ]
+        summaries.append(
+            DecaySummary(
+                pdgids=None,
+                decay_names="",
+                count=int(total_none_count),
+                fraction=float(total_none_count / total) if total > 0 else 0.0,
+            )
         )
-    table.sort(key=lambda row: float(row[3].strip("%")), reverse=True)
-    print(
-        tabulate(
-            table,
-            headers=["Decay Products (PDGIDs)", "Decay Names", "Frequency", "Fraction"],
-            tablefmt="fancy_grid",
-        )
-    )
+
+    summaries.sort(key=lambda s: s.fraction, reverse=True)
+
+    return summaries
