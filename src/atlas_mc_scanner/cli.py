@@ -78,7 +78,8 @@ def particles(
     epilog="""
 Note:
 
-    - `No Decay Products` means that a `TruthParticle` decay vertex was found, but it had no outgoing particles.
+    - `No Decay Products` means that a `TruthParticle` decay vertex was found, but it had no
+       outgoing particles.
 
     - `Stable` means no decay vertex was found.
 """
@@ -115,12 +116,14 @@ def decays(
             decay_products = "No Decay Products"
         else:
             decay_products = list(s.pdgids)
-        table.append([
-            decay_products,
-            s.decay_names,
-            s.count,
-            f"{s.fraction:.2%}",
-        ])
+        table.append(
+            [
+                decay_products,
+                s.decay_names,
+                s.count,
+                f"{s.fraction:.2%}",
+            ]
+        )
     print(
         tabulate(
             table,
