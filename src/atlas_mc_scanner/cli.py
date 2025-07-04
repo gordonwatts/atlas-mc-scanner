@@ -5,6 +5,7 @@
 Command-line interface for atlas-mc-scanner
 """
 import logging
+from tabulate import tabulate
 import typer
 
 app = typer.Typer()
@@ -43,9 +44,34 @@ def particles(
 ):
     """Dump particles in the dataset."""
     set_verbosity(verbose)
-    from atlas_mc_scanner.list_particles import execute_request
+    from atlas_mc_scanner.list_particles import summarize_particles
 
-    execute_request(data_set_name, container, no_abs)
+    summaries = summarize_particles(data_set_name, container, no_abs)
+    table = [
+        (
+            f"{s.pdgid:d}" if no_abs else f"{abs(s.pdgid):d}",
+            s.name,
+            s.count,
+            s.avg_per_event,
+            s.max_per_event,
+            s.min_per_event,
+        )
+        for s in summaries
+    ]
+    print(
+        tabulate(
+            table,
+            headers=[
+                "PDG ID" if no_abs else "abs(PDG ID)",
+                "Name",
+                "Count",
+                "Avg Count/Event",
+                "Max Count/Event",
+                "Min Count/Event",
+            ],
+            tablefmt="fancy_grid",
+        )
+    )
 
 
 @app.command(
@@ -80,7 +106,28 @@ def decays(
     set_verbosity(verbose)
     from atlas_mc_scanner.decays import execute_decay
 
-    execute_decay(data_set_name, particle_name, container)
+    summaries = execute_decay(data_set_name, particle_name, container)
+    table = []
+    for s in summaries:
+        if s.pdgids is None:
+            decay_products = "Stable"
+        elif len(s.pdgids) == 0:
+            decay_products = "No Decay Products"
+        else:
+            decay_products = list(s.pdgids)
+        table.append([
+            decay_products,
+            s.decay_names,
+            s.count,
+            f"{s.fraction:.2%}",
+        ])
+    print(
+        tabulate(
+            table,
+            headers=["Decay Products (PDGIDs)", "Decay Names", "Frequency", "Fraction"],
+            tablefmt="fancy_grid",
+        )
+    )
 
 
 @app.command()
@@ -98,7 +145,15 @@ def find_containers(
     set_verbosity(verbose)
     from atlas_mc_scanner.find_containers import execute_find_containers
 
-    execute_find_containers(data_set_name)
+    containers = execute_find_containers(data_set_name)
+    table = [[c.name] for c in containers]
+    print(
+        tabulate(
+            table,
+            headers=["Container Name"],
+            tablefmt="fancy_grid",
+        )
+    )
 
 
 if __name__ == "__main__":

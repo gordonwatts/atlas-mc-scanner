@@ -1,9 +1,23 @@
 import awkward as ak
 import numpy as np
+from dataclasses import dataclass
+from typing import List
+
 from func_adl_servicex_xaodr25 import FuncADLQueryPHYS
-from tabulate import tabulate
 
 from atlas_mc_scanner.common import run_query, get_particle_name
+
+
+@dataclass
+class ParticleSummary:
+    """Summary information for a particular particle id."""
+
+    pdgid: int
+    name: str
+    count: int
+    avg_per_event: float
+    max_per_event: int
+    min_per_event: int
 
 
 def query(container_name="TruthBSMWithDecayParticles"):
@@ -19,7 +33,13 @@ def query(container_name="TruthBSMWithDecayParticles"):
     return result
 
 
-def execute_request(ds_name, container_name="TruthBSMWithDecayParticles", no_abs=False):
+def summarize_particles(
+    ds_name: str,
+    container_name: str = "TruthBSMWithDecayParticles",
+    no_abs: bool = False,
+) -> List[ParticleSummary]:
+    """Return a summary of particles found in the dataset."""
+
     q = query(container_name)
     result = run_query(q, ds_name)
 
@@ -37,30 +57,17 @@ def execute_request(ds_name, container_name="TruthBSMWithDecayParticles", no_abs
     max_count = {pid: ak.max(count[pid]) for pid in unique}
     min_count = {pid: ak.min(count[pid]) for pid in unique}
 
-    # Build and print final table.
-    table = [
-        (
-            f"{int(pid):d}",
-            get_particle_name(int(pid)),
-            count,
-            count / total_events,
-            max_count[pid],
-            min_count[pid],
+    summaries = [
+        ParticleSummary(
+            pdgid=int(pid),
+            name=get_particle_name(int(pid)),
+            count=count,
+            avg_per_event=count / total_events,
+            max_per_event=int(max_count[pid]),
+            min_per_event=int(min_count[pid]),
         )
         for pid, count in pdgid_counts.items()
     ]
-    table.sort(key=lambda x: x[2], reverse=True)  # type: ignore
-    print(
-        tabulate(
-            table,
-            headers=[
-                "PDG ID" if no_abs else "abs(PDG ID)",
-                "Name",
-                "Count",
-                "Avg Count/Event",
-                "Max Count/Event",
-                "Min Count/Event",
-            ],
-            tablefmt="fancy_grid",
-        )
-    )
+
+    summaries.sort(key=lambda s: s.count, reverse=True)
+    return summaries
