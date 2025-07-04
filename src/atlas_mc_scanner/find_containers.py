@@ -26,4 +26,6 @@ def execute_find_containers(data_set_name: str) -> List[ContainerInfo]:
             container_names.append(match.group(1))
     # container_names now contains the parsed names, e.g., ['TruthBSM', ...]
 
-    return [ContainerInfo(name=n) for n in container_names]
+    return sorted(
+        [ContainerInfo(name=n) for n in container_names], key=lambda x: x.name
+    )
