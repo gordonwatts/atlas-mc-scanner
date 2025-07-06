@@ -82,6 +82,10 @@ The ATLAS decay model is complex:
 - If the _Decay Products_ column contains `No Decay Products`, that means a decay vertex was found in the `TruthParticle`, but it had decay products.
 - If the _Decay Products_ column contains `Stable`, that means no decay vertex was found.
 
+**Note:**
+
+- `uvx` won't update `atlas-mc-scanner` unless explicitly told. If you think there is a new version released, please do `uvx atlas-mc-scanner @latest --help` to make sure you have the most recently released.
+
 ### Commands
 
 - Use the `particles` sub-command to list a container of truth particles
